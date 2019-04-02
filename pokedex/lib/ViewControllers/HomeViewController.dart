@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pokedex/ViewControllers/SecondScreen.dart';
+import 'package:pokedex/Widgets/AppDrawer.dart';
 
 class HomeViewController extends StatefulWidget {
   @override
@@ -14,42 +16,21 @@ class _HomeViewControllerState extends State<HomeViewController> {
       appBar: appBar,
       body: ListView(
         children: <Widget>[
-          Text("Teste 1"),
+          GestureDetector(
+            onTap: () {
+              MaterialPageRoute(builder: (context) => SecondScreen());
+            },
+            child: Text("Teste 1"),
+          ),
           Text("Teste 2")
         ],
       ),
-      drawer: Column(
-        children: <Widget>[
-          Container(
-            height: appBar.preferredSize.height,
-            width: _getDrawerWidth(),
-            color: Colors.red,
-          ),
-          Container(
-            color: Colors.white,
-            width: _getDrawerWidth(),
-            child: ListView(
-              children: <Widget>[
-                Text("Teste 3"),
-                Text("Teste 4")
-              ],
-            ),
-          ),
-        ],
-      ),
+      drawer: AppDrawer("Hey")
     );
   }
 
   AppBar appBar = AppBar(
-    title: Text("Pokedéx"),
+    title: Text("Pokédex"),
     backgroundColor: Colors.red,
   );
-
-  double _getDrawerWidth() {
-    return MediaQuery.of(context).size.width * 0.6;
-  }
-
-  double _getDrawerHeight() {
-    return MediaQuery.of(context).size.height - appBar.preferredSize.height;
-  }
 }
