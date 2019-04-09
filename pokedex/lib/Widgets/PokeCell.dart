@@ -16,7 +16,7 @@ class PokeCell extends StatelessWidget {
         children: <Widget>[
           Container(
             padding: EdgeInsets.only(left: 16.0),
-            child: Image.asset("Thumbnails/" + name.toLowerCase()),
+            child: Image.asset("Thumbnails/" + name.toLowerCase() + ".png"),
           ),
           Container(
             padding: EdgeInsets.only(left: 46.0),
