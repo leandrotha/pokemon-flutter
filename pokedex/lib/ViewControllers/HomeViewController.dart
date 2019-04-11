@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pokedex/Utils/ImageLoader.dart';
+import 'package:pokedex/ViewControllers/SecondScreen.dart';
+import 'package:pokedex/Widgets/AppDrawer.dart';
+import 'package:pokedex/Widgets/PokeCell.dart';
 
 class HomeViewController extends StatefulWidget {
   @override
@@ -11,45 +15,35 @@ class _HomeViewControllerState extends State<HomeViewController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar,
-      body: ListView(
-        children: <Widget>[
-          Text("Teste 1"),
-          Text("Teste 2")
-        ],
+      appBar: AppBar(
+        title: Text("Pokédex"),
+        backgroundColor: Colors.red,
       ),
-      drawer: Column(
-        children: <Widget>[
-          Container(
-            height: appBar.preferredSize.height,
-            width: _getDrawerWidth(),
-            color: Colors.red,
-          ),
-          Container(
-            color: Colors.white,
-            width: _getDrawerWidth(),
-            child: ListView(
-              children: <Widget>[
-                Text("Teste 3"),
-                Text("Teste 4")
-              ],
-            ),
-          ),
-        ],
+      body: FutureBuilder(
+          future: ImageLoader.loadNames(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<String> pokeList;
+              try {
+                pokeList = snapshot.data as List<String>;
+              } catch (e) {
+                return AlertDialog(
+                  title: Text("Deu ruim"),
+                );
+              }
+              return ListView.builder(
+                itemCount: pokeList.length ?? 0,
+                itemBuilder: (context, index) {
+                  return PokeCell(pokeList[index]);
+                },
+              );
+            }
+
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
       ),
     );
-  }
-
-  AppBar appBar = AppBar(
-    title: Text("Pokedéx"),
-    backgroundColor: Colors.red,
-  );
-
-  double _getDrawerWidth() {
-    return MediaQuery.of(context).size.width * 0.6;
-  }
-
-  double _getDrawerHeight() {
-    return MediaQuery.of(context).size.height - appBar.preferredSize.height;
   }
 }
