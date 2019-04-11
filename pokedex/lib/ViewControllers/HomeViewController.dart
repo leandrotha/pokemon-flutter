@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pokedex/Utils/ImageLoader.dart';
 import 'package:pokedex/ViewControllers/SecondScreen.dart';
 import 'package:pokedex/Widgets/AppDrawer.dart';
+import 'package:pokedex/Widgets/PokeCell.dart';
 
 class HomeViewController extends StatefulWidget {
   @override
@@ -13,24 +15,35 @@ class _HomeViewControllerState extends State<HomeViewController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar,
-      body: ListView(
-        children: <Widget>[
-          GestureDetector(
-            onTap: () {
-              MaterialPageRoute(builder: (context) => SecondScreen());
-            },
-            child: Text("Teste 1"),
-          ),
-          Text("Teste 2")
-        ],
+      appBar: AppBar(
+        title: Text("Pokédex"),
+        backgroundColor: Colors.red,
       ),
-      drawer: AppDrawer("Hey")
+      body: FutureBuilder(
+          future: ImageLoader.loadNames(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<String> pokeList;
+              try {
+                pokeList = snapshot.data as List<String>;
+              } catch (e) {
+                return AlertDialog(
+                  title: Text("Deu ruim"),
+                );
+              }
+              return ListView.builder(
+                itemCount: pokeList.length ?? 0,
+                itemBuilder: (context, index) {
+                  return PokeCell(pokeList[index]);
+                },
+              );
+            }
+
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+      ),
     );
   }
-
-  AppBar appBar = AppBar(
-    title: Text("Pokédex"),
-    backgroundColor: Colors.red,
-  );
 }
