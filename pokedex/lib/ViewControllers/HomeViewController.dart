@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pokedex/Utils/ImageLoader.dart';
+import 'package:pokedex/Model/Pokemon.dart';
+import 'package:pokedex/Utils/PokemonLoader.dart';
 import 'package:pokedex/ViewControllers/SecondScreen.dart';
-import 'package:pokedex/Widgets/AppDrawer.dart';
 import 'package:pokedex/Widgets/PokeCell.dart';
 
 class HomeViewController extends StatefulWidget {
@@ -20,12 +20,12 @@ class _HomeViewControllerState extends State<HomeViewController> {
         backgroundColor: Colors.red,
       ),
       body: FutureBuilder(
-          future: ImageLoader.loadNames(),
+          future: PokemonLoader.loadPokemons(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              List<String> pokeList;
+              List<Pokemon> pokeList;
               try {
-                pokeList = snapshot.data as List<String>;
+                pokeList = snapshot.data as List<Pokemon>;
               } catch (e) {
                 return AlertDialog(
                   title: Text("Deu ruim"),
@@ -34,7 +34,15 @@ class _HomeViewControllerState extends State<HomeViewController> {
               return ListView.builder(
                 itemCount: pokeList.length ?? 0,
                 itemBuilder: (context, index) {
-                  return PokeCell(pokeList[index]);
+                  return GestureDetector(
+                    onTap: (){
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SecondScreen(pokemon: pokeList[index]))
+                      );
+                    },
+                    child: PokeCell(pokeList[index].name),
+                  );
                 },
               );
             }

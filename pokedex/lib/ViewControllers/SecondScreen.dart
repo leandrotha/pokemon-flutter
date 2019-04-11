@@ -1,43 +1,31 @@
-import 'package:csv/csv.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pokedex/Utils/ImageLoader.dart';
-import 'package:pokedex/Widgets/PokeCell.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:pokedex/Model/Pokemon.dart';
 
 class SecondScreen extends StatelessWidget {
+
+  Pokemon pokemon;
+
+  SecondScreen({@required this.pokemon});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Pokédex"),
+        title: Text(pokemon.name),
         backgroundColor: Colors.red,
       ),
-      body: FutureBuilder(
-        future: ImageLoader.loadNames(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            List<String> pokeList;
-            try {
-              pokeList = snapshot.data as List<String>;
-            } catch (e) {
-              return AlertDialog(
-                title: Text("Deu ruim"),
-              );
-            }
-            return ListView.builder(
-              itemCount: pokeList.length ?? 0,
-              itemBuilder: (context, index) {
-                return PokeCell(pokeList[index]);
-              },
-            );
-          }
-
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      ),
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          Container(
+            child: Image.asset("Thumbnails/" + pokemon.name.toLowerCase() + ".png"),
+            padding: EdgeInsets.only(top: 20.0, left: 20.0),
+          ),
+          Text(pokemon.type1),
+          Text(pokemon.type2)
+        ],
+      )
     );
   }
 }
